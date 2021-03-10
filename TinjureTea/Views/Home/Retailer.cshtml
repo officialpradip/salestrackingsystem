@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Title = "Retailer";
+}
+
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+
+                    <form class="user">
+
+                        <div class="form-group col-md-6">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Create Retailer</div>
+                        </div>
+                        <input type="hidden" id="retailerId" />
+                        <input type="hidden" id="status" />
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="Name" aria-describedby="emailHelp" placeholder="Retailer Name">
+                        </div>
+                         <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="PhoneNo" aria-describedby="emailHelp" placeholder="Phone No">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="email" class="form-control form-control-user" id="Email" aria-describedby="emailHelp" placeholder="Email">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="state" aria-describedby="emailHelp" placeholder="State">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="District" aria-describedby="emailHelp" placeholder="District">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="Address" aria-describedby="emailHelp" placeholder="Address">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <select class="form-control" id="status">
+                                <option>--Select--</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <a href="#" onclick="SaveRetailer()" class="btn btn-primary btn-sm">
+                                Save
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="form-group col-md-6">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Retailer List</div>
+                    </div>
+
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Retailer Name</th>
+                                 <th>Phone No</th>
+                                <th>Email</th>
+                                <th>State</th>
+                                <th>District</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="trDiv"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        GetAllRetailer();
+    });
+
+    function SaveRetailer() {
+        var retailer = new Object();
+        retailer.RetailerId = $("#retailerId").val();
+        retailer.Name = $("#Name").val();
+        retailer.PhoneNo = $("#PhoneNo").val();
+        retailer.Email = $("#Email").val();
+        retailer.State = $("#state").val();
+        retailer.District = $("#District").val();
+        retailer.Address = $("#Address").val();
+        retailer.Status = $("#status").val();
+        var data = JSON.stringify({
+            reta: retailer
+        });
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Home/SaveRetailer",
+            data: data,
+            success: function (result) {
+                if (result == true) {
+                    GetAllRetailer();
+                    Reset();
+                    alert("Save Success!");
+                }
+                else {
+                    alert("Save failed!");
+                }
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function GetAllRetailer() {
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'Get',
+            url: "/Home/GetAllRetailer",
+            success: function (data) {
+                $("#trDiv").html('');
+                var tdContent = '';
+                for (var i = 0; i < data.length; i++) {
+                    tdContent += '<tr><td>' + data[i].Name + '</td>' + '<td>' + data[i].PhoneNo + '</td>' + '<td>' + data[i].Email + '</td>' + '<td>' + data[i].State + '</td>' + '<td>' + data[i].District + '</td>' + '<td>' + data[i].Address + '</td>' + '<td>' + data[i].Status + '</td>' + '<td><a href="#" onclick="Edit(' + data[i].retailerId + ",'" + data[i].Name + "'," + data[i].Status + ');">Edit</a></td></tr>'; // if Name is property of your Person object
+                }
+                $("#trDiv").append(tdContent);
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+    function Edit(catId, catName, status) {
+        $("#categoryId").val(catId);
+        $("#categoryName").val(catName);
+        $("#status").val(status);
+    }
+    function Reset() {
+        $("#categoryId").val(null);
+        $("#categoryName").val(null);
+        $("#status").val(null);
+    }
+</script>

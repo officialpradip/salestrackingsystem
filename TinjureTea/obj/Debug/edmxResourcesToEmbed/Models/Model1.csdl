@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TrinjureTeaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TrinjureTeaEntities1" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TrinjureTeaModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TrinjureTeaModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <EntitySet Name="Batches" EntityType="TrinjureTeaModel.Batch" />
+    <EntitySet Name="Categories" EntityType="TrinjureTeaModel.Category" />
+    <EntitySet Name="Distributors" EntityType="TrinjureTeaModel.Distributor" />
+    <EntitySet Name="Products" EntityType="TrinjureTeaModel.Product" />
+    <EntitySet Name="ProductStocks" EntityType="TrinjureTeaModel.ProductStock" />
+    <EntitySet Name="Retailers" EntityType="TrinjureTeaModel.Retailer" />
+    <EntitySet Name="RolePermissions" EntityType="TrinjureTeaModel.RolePermission" />
+    <EntitySet Name="Sales" EntityType="TrinjureTeaModel.Sale" />
+    <EntitySet Name="SalesDetails" EntityType="TrinjureTeaModel.SalesDetail" />
+    <EntitySet Name="sysdiagrams" EntityType="TrinjureTeaModel.sysdiagram" />
+    <EntitySet Name="Transactions" EntityType="TrinjureTeaModel.Transaction" />
+    <EntitySet Name="Users" EntityType="TrinjureTeaModel.User" />
+    <AssociationSet Name="FK_ProductStock_Batch" Association="TrinjureTeaModel.FK_ProductStock_Batch">
+      <End Role="Batch" EntitySet="Batches" />
+      <End Role="ProductStock" EntitySet="ProductStocks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_Category" Association="TrinjureTeaModel.FK_Product_Category">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Product" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Distributors_Product" Association="TrinjureTeaModel.FK_Distributors_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="Distributor" EntitySet="Distributors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Retailers_Distributors" Association="TrinjureTeaModel.FK_Retailers_Distributors">
+      <End Role="Distributor" EntitySet="Distributors" />
+      <End Role="Retailer" EntitySet="Retailers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Transactions_Distributors" Association="TrinjureTeaModel.FK_Transactions_Distributors">
+      <End Role="Distributor" EntitySet="Distributors" />
+      <End Role="Transaction" EntitySet="Transactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductQuantity_Product" Association="TrinjureTeaModel.FK_ProductQuantity_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="ProductStock" EntitySet="ProductStocks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SalesDetail_Product" Association="TrinjureTeaModel.FK_SalesDetail_Product">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="SalesDetail" EntitySet="SalesDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SalesDetail_Sale" Association="TrinjureTeaModel.FK_SalesDetail_Sale">
+      <End Role="Sale" EntitySet="Sales" />
+      <End Role="SalesDetail" EntitySet="SalesDetails" />
+    </AssociationSet>
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Batch">
+    <Key>
+      <PropertyRef Name="BatchId" />
+    </Key>
+    <Property Name="BatchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BatchName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ProductStocks" Relationship="TrinjureTeaModel.FK_ProductStock_Batch" FromRole="Batch" ToRole="ProductStock" />
+  </EntityType>
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="CategoryId" />
+    </Key>
+    <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <NavigationProperty Name="Products" Relationship="TrinjureTeaModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Distributor">
+    <Key>
+      <PropertyRef Name="DistributorId" />
+    </Key>
+    <Property Name="DistributorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PhoneNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="Int32" Nullable="false" />
+    <Property Name="District" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="TrinjureTeaModel.FK_Distributors_Product" FromRole="Distributor" ToRole="Product" />
+    <NavigationProperty Name="Retailers" Relationship="TrinjureTeaModel.FK_Retailers_Distributors" FromRole="Distributor" ToRole="Retailer" />
+    <NavigationProperty Name="Transactions" Relationship="TrinjureTeaModel.FK_Transactions_Distributors" FromRole="Distributor" ToRole="Transaction" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CategoryId" Type="Int32" />
+    <Property Name="Status" Type="Int32" />
+    <NavigationProperty Name="Category" Relationship="TrinjureTeaModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+    <NavigationProperty Name="Distributors" Relationship="TrinjureTeaModel.FK_Distributors_Product" FromRole="Product" ToRole="Distributor" />
+    <NavigationProperty Name="ProductStocks" Relationship="TrinjureTeaModel.FK_ProductQuantity_Product" FromRole="Product" ToRole="ProductStock" />
+    <NavigationProperty Name="SalesDetails" Relationship="TrinjureTeaModel.FK_SalesDetail_Product" FromRole="Product" ToRole="SalesDetail" />
+  </EntityType>
+  <EntityType Name="ProductStock">
+    <Key>
+      <PropertyRef Name="ProductQtyId" />
+    </Key>
+    <Property Name="ProductQtyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="BatchId" Type="Int32" />
+    <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="SalesPrice" Type="Decimal" Precision="18" Scale="0" />
+    <NavigationProperty Name="Batch" Relationship="TrinjureTeaModel.FK_ProductStock_Batch" FromRole="ProductStock" ToRole="Batch" />
+    <NavigationProperty Name="Product" Relationship="TrinjureTeaModel.FK_ProductQuantity_Product" FromRole="ProductStock" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Retailer">
+    <Key>
+      <PropertyRef Name="RetailerId" />
+    </Key>
+    <Property Name="RetailerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DistributorId" Type="Int32" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PhoneNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="Int32" Nullable="false" />
+    <Property Name="District" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Distributor" Relationship="TrinjureTeaModel.FK_Retailers_Distributors" FromRole="Retailer" ToRole="Distributor" />
+  </EntityType>
+  <EntityType Name="RolePermission">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Tag" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Sale">
+    <Key>
+      <PropertyRef Name="SalesId" />
+    </Key>
+    <Property Name="SalesId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OrderDate" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TotalAmout" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedOn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <NavigationProperty Name="SalesDetails" Relationship="TrinjureTeaModel.FK_SalesDetail_Sale" FromRole="Sale" ToRole="SalesDetail" />
+  </EntityType>
+  <EntityType Name="SalesDetail">
+    <Key>
+      <PropertyRef Name="SalesDetailId" />
+    </Key>
+    <Property Name="SalesDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesId" Type="Int32" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="UnitPrice" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Total" Type="Int32" />
+    <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedOn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <NavigationProperty Name="Product" Relationship="TrinjureTeaModel.FK_SalesDetail_Product" FromRole="SalesDetail" ToRole="Product" />
+    <NavigationProperty Name="Sale" Relationship="TrinjureTeaModel.FK_SalesDetail_Sale" FromRole="SalesDetail" ToRole="Sale" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Transaction">
+    <Key>
+      <PropertyRef Name="TransactionId" />
+    </Key>
+    <Property Name="TransactionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DistributorId" Type="Int32" />
+    <Property Name="RetailerId" Type="Int32" />
+    <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Balance" Type="Int32" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="SalesId" Type="Int32" />
+    <Property Name="Status" Type="Int32" />
+    <NavigationProperty Name="Distributor" Relationship="TrinjureTeaModel.FK_Transactions_Distributors" FromRole="Transaction" ToRole="Distributor" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+  </EntityType>
+  <Association Name="FK_ProductStock_Batch">
+    <End Type="TrinjureTeaModel.Batch" Role="Batch" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.ProductStock" Role="ProductStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Batch">
+        <PropertyRef Name="BatchId" />
+      </Principal>
+      <Dependent Role="ProductStock">
+        <PropertyRef Name="BatchId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_Category">
+    <End Type="TrinjureTeaModel.Category" Role="Category" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.Product" Role="Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Distributors_Product">
+    <End Type="TrinjureTeaModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.Distributor" Role="Distributor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="Distributor">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Retailers_Distributors">
+    <End Type="TrinjureTeaModel.Distributor" Role="Distributor" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.Retailer" Role="Retailer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Distributor">
+        <PropertyRef Name="DistributorId" />
+      </Principal>
+      <Dependent Role="Retailer">
+        <PropertyRef Name="DistributorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Transactions_Distributors">
+    <End Type="TrinjureTeaModel.Distributor" Role="Distributor" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.Transaction" Role="Transaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Distributor">
+        <PropertyRef Name="DistributorId" />
+      </Principal>
+      <Dependent Role="Transaction">
+        <PropertyRef Name="DistributorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductQuantity_Product">
+    <End Type="TrinjureTeaModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.ProductStock" Role="ProductStock" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="ProductStock">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SalesDetail_Product">
+    <End Type="TrinjureTeaModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.SalesDetail" Role="SalesDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="SalesDetail">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SalesDetail_Sale">
+    <End Type="TrinjureTeaModel.Sale" Role="Sale" Multiplicity="0..1" />
+    <End Type="TrinjureTeaModel.SalesDetail" Role="SalesDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sale">
+        <PropertyRef Name="SalesId" />
+      </Principal>
+      <Dependent Role="SalesDetail">
+        <PropertyRef Name="SalesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

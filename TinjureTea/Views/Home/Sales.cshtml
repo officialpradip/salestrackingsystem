@@ -1,0 +1,189 @@
+﻿
+
+
+@{
+    ViewBag.Title = "Sales";
+}
+
+
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+
+                    <form class="user">
+
+                        <div class="form-group col-md-6">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Create Sales</div>
+                        </div>
+                        <input type="hidden" id="SalesId" />
+                        <input type="hidden" id="status" />
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="SalesId" aria-describedby="emailHelp" placeholder="Sales">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="OrderNo" aria-describedby="emailHelp" placeholder="OrderNo">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="CustomerName" aria-describedby="emailHelp" placeholder="CustomerName">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="CustomerPhone" aria-describedby="emailHelp" placeholder="CustomerPhone">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="CustomerAddress" aria-describedby="emailHelp" placeholder="CustomerAddress">
+                        </div>
+
+
+                        <div class="form-group col-md-6">
+                            <input type="date" class="form-control form-control-user" id="OrderDate" aria-describedby="emailHelp" placeholder="OrderDate">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="PaymentMethod" aria-describedby="emailHelp" placeholder="PaymentMethod">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="TotalAmount" aria-describedby="emailHelp" placeholder="TotalAmount">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control form-control-user" id="CreatedBy" aria-describedby="emailHelp" placeholder="CreatedBy">
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <input type="date" class="form-control form-control-user" id="CreatedOn" aria-describedby="emailHelp" placeholder="CreatedOn">
+                        </div>
+
+
+
+                        <div class="form-group col-md-6">
+                            <select class="form-control" id="status">
+                                <option>--Select--</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <a href="#" onclick="SaveSales()" class="btn btn-primary btn-sm">
+                                Save
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="col-xl-12 col-md-12 mb-12">
+    <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="form-group col-md-6">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sales List</div>
+                    </div>
+
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sales Id</th>
+                                <th>Order No</th>
+                                <th>Customer Name</th>
+                                <th>Customer Phone</th> 
+                                <th>Customer Address</th>
+                                <th>Order Date</th>
+                                <th>Payment Method</th>
+                                <th>Total Amount</th>
+                                <th>Created By</th>
+                                <th>Created On</th>
+                                <th>Status</th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="trDiv"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        GetAllSales();
+    });
+
+    function SaveSales() {
+        var Sales = new Object();
+        Sales.SalesId = $("#SalesId").val();
+        Sales.OrderNo = $("#OrderNo").val();
+        Sales.CustomerName = $("#CustomerName").val();
+        Sales.CustomerPhone = $("#CustomerPhone").val();
+        Sales.CustomerAddress = $("#CustomerAddress").val();
+
+        Sales.OrderDate = $("#OrderDate").val();
+        Sales.PaymentMethod = $("#PaymentMethod").val();
+        Sales.TotalAmount = $("#TotalAmount").val();
+        Sales.CreatedBy = $("#CreatedBy").val();
+        Sales.CreatedOn = $("#CreatedOn").val();
+        Sales.Status = $("#status").val();
+        var data = JSON.stringify({
+            sales: Sales
+        });
+        return $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: "/Home/SaveSales",
+            data: data,
+            success: function (result) {
+                if (result == true) {
+                    GetAllSales();
+                    Reset();
+                    alert("Save Success!");
+                }
+                else {
+                    alert("Save failed!");
+                }
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+
+    function GetAllSales() {
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'Get',
+            url: "/Home/GetAllSales",
+            success: function (data) {
+                $("#trDiv").html('');
+                var tdContent = '';
+                for (var i = 0; i < data.length; i++) {
+                    tdContent += '<tr><td>' + data[i].SalesId + '</td>' + '<td>' + data[i].OrderNo + '</td>' + '<td>' + data[i].CustomerName + '</td>' + '<td>' + data[i].CustomerPhone + '</td>' + '<td>' + data[i].CustomerAddress + '</td>' + '<td>' + data[i].OrderDate + '</td>' + '<td>' + data[i].PaymentMethod + '</td>' + '<td>' + data[i].TotalAmount + '</td>' + '<td>' + data[i].CreatedBy + '</td>' + '<td>' + data[i].CreatedOn + '</td>' + '<td>' + data[i].Status + '</td>' + '<td><a href="#" onclick="Edit(' + data[i].SalesId + ",'" + data[i].CreatedBy + "'," + data[i].Status + ');">Edit</a></td></tr>'; // if Name is property of your Person object
+                }
+                $("#trDiv").append(tdContent);
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+    function Edit(SalesId, CreatedBy, status) {
+        $("#SalesId").val(SalesId);
+        $("#CreatedBy").val(CreatedBy);
+        $("#status").val(status);
+    }
+    function Reset() {
+        $("#SalesId").val(null);
+        $("#CreatedBy").val(null);
+        $("#status").val(null);
+    }
+</script>
+
